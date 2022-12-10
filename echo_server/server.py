@@ -3,6 +3,7 @@
 # Server -> "HELLO WORLD" -> Client
 import argparse
 import socket
+import time
 
 def run_server(server_host: str, server_port: int) -> None:
 
@@ -16,23 +17,28 @@ def run_server(server_host: str, server_port: int) -> None:
   server_socket.listen()
   print(f"Listening on {server_port}")
 
-  # Step 4 - Accept connections
-  # Blocking call
-  connection, addr = server_socket.accept()
-  # Blocked until some client connects
-  # Ephemeral client port
-  print(f"Connected from {connection.getsockname()} to {connection.getpeername()}")
+  # Multiple connections - infinite loop
+  # Sequential behaviour - all connections handled by 1 thread
+  while True:
+    # Step 4 - Accept connections
+    # Blocking call
+    connection, addr = server_socket.accept()
+    # Blocked until some client connects
+    # Ephemeral client port
+    print(f"Connected from {connection.getsockname()} to {connection.getpeername()}")
 
-  # Step 5 - Receive data
-  data = connection.recv(1024)
-  print(f"Received {data}")
+    # Step 5 - Receive data
+    data = connection.recv(1024)
+    print(f"Received {data}")
 
-  # Step 6 - Send data
-  connection.sendall(data.upper())
+    time.sleep(5)
 
-  # Step 7 - Close connection
-  server_socket.close()
-  connection.close()
+    # Step 6 - Send data
+    connection.sendall(data.upper())
+
+    # Step 7 - Close connection
+    connection.close()
+    # server_socket not closed, but client connection closed everytime
 
 
 if __name__ == '__main__':

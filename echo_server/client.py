@@ -34,3 +34,5 @@ if __name__ == '__main__':
   host, port = args.host, args.port
 
   connect_to_server(host, port)
+
+# python client.py --port 6000
